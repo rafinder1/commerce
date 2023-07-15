@@ -1,0 +1,37 @@
+{% extends "auctions/layout.html" %}
+{% load static %}
+
+{% block body %}
+    <h2>Watch List</h2>
+
+    {% for auction in watch_list %}
+        {% if auction.available %}
+        <a href="{% url 'listing' auction.id %}">
+            <div class="listening">
+
+                {% for n in auction.photos.all %}
+                    <img src="{% static n.url %}" width="250" height="250">
+                {% endfor %}
+
+                <h3>{{auction.name}}</h3>
+                    
+                
+                <li>
+                    Starting price: {{auction.price}}
+                </li>
+                <li>
+                    Highest Bid: {{auction.current_bid}}
+                </li>
+                
+                <li>
+                    Date of creation: {{auction.creation_date}}
+                </li>
+                {% if user.is_authenticated %}
+                <br>
+                    <a href="{% url 'watchlist_remove' auction.id %}" class="btn btn-secondary">Remove Item</a>
+                {% endif %}
+            </div>
+        </a>
+            {% endif %}
+        {% endfor %}
+{% endblock %}

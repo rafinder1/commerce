@@ -1,0 +1,74 @@
+{% extends "auctions/layout.html" %}
+{% load static %}
+
+{% block body %}
+    <h2>Active Listing</h2>
+
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        </div>
+        {% endif %}
+
+            <div class="listening">
+
+                {% for n in listing.photos.all %}
+                    <img src="{% static n.url %}" width="250" height="250">
+                {% endfor %}
+                
+
+                
+
+                <h3>{{listing.name}}</h3>
+                    
+                {{listing.description}}
+                <li>
+                    Current bid: {{listing.current_bid}}
+                </li>
+                <li>
+                    Date of creation: {{listing.creation_date}}
+                </li>
+                <br>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'watchlist_add' listing.id %}" class="btn btn-primary">Add to Watch List</a>
+                {% endif %}
+                <br>
+
+                <form action="{% url 'bid' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="auction_id" value="{{listing.id}}"></input>
+                    <input type="number" name="bid" placeholder="Bid Price"></input>
+                    <input type="submit" value="Add">
+                </form>
+                <br>
+                {% if user == listing.creator %}
+                    <a href="{% url 'close' listing.id %}" class="btn btn-secondary">Close Auction</a>
+                {% endif %}
+                <br>
+                <h6>Comments about object</h6>
+                <form action="{% url 'auction_comments' listing.id %}" method="POST">
+                    {% csrf_token %}
+                    <input type="text" name="text"placeholder="Object is ..."></input>
+                    <input type="hidden" name="auction_id" value="{{listing.id}}"></input>
+                    <input type="submit" value="Add">
+                </form>
+
+
+                {% if comments %}
+                    <h6>All comments</h6>
+
+                    {% for com in comments.all %}
+                    <div class="comment">
+                        {{com.text}}
+                        <br>
+                        User: {{com.commenter}}
+                        <br>
+                    </div>
+                    {% endfor%}
+                {% endif %}
+
+            </div>
+            
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "auctions/layout.html" %}
+
+{% load static %}
+
+{% block body %}
+    <h2>Active Listings</h2>
+
+    <ul>
+    {% for auction in auctions %}
+        {% if auction.available %}
+            <div class="listening">
+                <a href="{% url 'listing' auction.id %}">
+                {% for n in auction.photos.all %}
+                    <img src="{% static n.url %}" width="250" height="250">
+                {% endfor %}
+                <h3>{{auction.name}}</h3>
+                    Description: {{auction.description}}
+                <li>
+                    Highest Bid: {{auction.current_bid}}
+                </li>
+                <li>
+                    Date of creation: {{auction.creation_date}}
+                </li>
+            </div>
+        {% endif %}
+    {% endfor %}
+    </ul>
+{% endblock %}
